@@ -1,0 +1,17 @@
+[general]
+template_dir = "templates"
+output_dir = "output"
+static_dir = "static"
+content_file = "content.toml"
+
+[deploy]
+branch = "gh-pages"
+
+[router]
+hash_route = true
+routes = [
+    # { path="/about", template = "about.html.jinja" },
+    # { path = "/research", template = "research.html.jinja" },
+    # { path = "/misc", template = "misc.html.jinja" }
+    { path = "/", template = "index.html.jinja"}
+]

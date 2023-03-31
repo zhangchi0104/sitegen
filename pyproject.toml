@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "sitegen"
+version = "0.1.0"
+description = ""
+authors = ["Alex Zhang <zhangchi0104@live.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Flask = "^2.2.3"
+tomli = "^2.0.1"
+pydantic = "^1.10.7"
+watchdog = "^3.0.0"
+rich = "^13.3.3"
+multiprocess = "^0.70.14"
+
+[tool.poetry.group.dev.dependencies]
+toml = "^0.10.2"
+yapf = "^0.32.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
