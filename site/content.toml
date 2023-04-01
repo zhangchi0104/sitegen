@@ -1,0 +1,6 @@
+[index]
+default_section = "about"
+
+[about]
+foo = "bar"
+bar = "foo"

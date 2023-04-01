@@ -1,4 +1,3 @@
-import logging
 from watchdog.events import FileSystemEventHandler
 from .config import Config
 from flask import Flask, render_template
@@ -6,9 +5,10 @@ import multiprocess as mp
 from pathlib import Path
 from tomli import load
 from types import FunctionType
+from .utils import LoggerMixin
 
 
-class DevServer(FileSystemEventHandler):
+class DevServer(FileSystemEventHandler, LoggerMixin):
 
     def __init__(
             self,
@@ -17,48 +17,53 @@ class DevServer(FileSystemEventHandler):
             port=8000,
             addr="127.0.0.1",
     ):
-        super().__init__()
-        self._logger = logging.getLogger("sitegen.devserver")
+        super().__init__(name="sitgen:DevServer")
         self._config = config
-        if self._config.router.hash_route:
-            self._logger.info(
-                "In dev server, hash routing is replaced with normal routing",
-            )
+
         self._port = port
         self._addr = addr
         self._project_root = project_root if isinstance(
             project_root, Path) else Path(project_root)
-        self._logger.debug(f"template_dir: {self.template_dir}")
-        self._server = Flask(
-            __name__,
-            template_folder=self.template_dir.absolute().as_posix(),
-        )
-        self._content = None
-        self._process = None
+        self.debug(f"Using config: {config}")
+        self.debug(f"static_dir = {self.static_dir.absolute().as_posix()}")
+        self._reset_server()
+        # setup routes
+        self.start_server()
 
-        self._logger.debug(f"Loading content from file '{self.content_file}'")
+    def load_context(self):
+        self.debug(f"Loading content from file '{self.content_file}'")
         with open(self.content_file, "rb") as f:
             self._content = load(f)
-        # setup routes
-        with self._server.app_context():
-            for route in self._config.router.routes:
-                self._logger.debug(
-                    f"Adding route: GET {route.path} -> template: {self.template_dir / route.template}"
-                )
-                self._server.add_url_rule(
-                    route.path,
-                    view_func=self._create_view_func(
-                        route.name,
-                        route.template,
-                        **self._content.get(route.name, {}),
-                    ),
-                )
 
-        self._restart_server()
+    @property
+    def static_dir(self):
+        return self._project_root / self._config.general.static_dir
 
     @property
     def template_dir(self):
         return self._project_root / self._config.general.template_dir
+
+    def _reset_server(self):
+        self._server = Flask(
+            __name__,
+            template_folder=self.template_dir.absolute().as_posix(),
+            static_folder=self.static_dir.absolute().as_posix(),
+            static_url_path="/static",
+        )
+        self.load_context()
+        self._routes_lookup(self.template_dir)
+
+    def lookup_context(self, url_path: str):
+        if url_path == "/":
+            return self._content.get("index", {})
+        else:
+            parts = url_path.strip("/").split('/')
+            res = self._content
+            for part in parts:
+                res = res.get(part, {})
+                if len(res) == 0:
+                    return res
+            return res
 
     @property
     def content_file(self):
@@ -66,18 +71,42 @@ class DevServer(FileSystemEventHandler):
 
     def _restart_server(self):
         if self._process is None:
-
-            self._process = self._create_process()
-            self._process.start()
-            self._logger.info(
-                f"Dev server istening on http://{self._addr}:{self._port}")
+            self.start_server()
         else:
-            self._logger.info("Restarting dev server")
-            self.terminate()
-            self._process = self._create_process()
-            self._logger.info(
-                f"Dev server istening on http://{self._addr}:{self._port}")
-            self._process.start()
+            self.info("Restarting dev server")
+            self.terminate_server()
+            self._reset_server()
+            self.start_server()
+
+    def start_server(self):
+        self._process = self._create_process()
+        self._process.start()
+        self.info(f"Dev server istening on http://{self._addr}:{self._port}")
+
+    def _routes_lookup(self, routes_dir: str, prefix: str = ""):
+        with self._server.app_context():
+            for path in Path(routes_dir).iterdir():
+                if path.is_dir():
+                    self._routes_lookup(path, prefix + f"/{path.name}")
+                elif path.as_posix().endswith(
+                        ".html.jinja") and not path.stem.startswith("_"):
+                    url_path = prefix if path.stem.startswith(
+                        "index.") else f"{prefix}/{path.stem.split('.')[0]}"
+                    if url_path == "":
+                        url_path = "/"
+                    context = self.lookup_context(url_path)
+                    context["SITEGEN_ENV"] = "dev"
+                    self._server.add_url_rule(
+                        url_path,
+                        view_func=self._create_view_func(
+                            url_path.replace("/", "_"),
+                            path.relative_to(self.template_dir).as_posix(),
+                            **context,
+                        ),
+                    )
+                    self.info(
+                        f"Adding route: GET {url_path} -> {path.as_posix()} with context {context}"
+                    )
 
     @staticmethod
     def _create_view_func(prefix, path: str, **context):
@@ -100,13 +129,12 @@ class DevServer(FileSystemEventHandler):
             kwargs={
                 "host": self._addr,
                 "port": self._port,
-                "debug": False
+                "debug": False,
             },
         )
 
-    def terminate(self):
+    def terminate_server(self):
         if self._process is not None and self._process.is_alive():
-
             self._process.terminate()
             self._process.join()
             self._process = None

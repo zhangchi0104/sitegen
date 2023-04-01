@@ -30,7 +30,6 @@ class RouterConfig(BaseModel):
 class Config(BaseModel):
     general: GeneralConfig
     deploy: DeployConfig
-    router: RouterConfig
 
     @classmethod
     def from_toml(cls, path: "PathLike") -> "Config":
