@@ -213,6 +213,18 @@ files = [
 ]
 
 [[package]]
+name = "mistune"
+version = "2.0.5"
+description = "A sane Markdown parser with useful plugins and renderers"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "mistune-2.0.5-py2.py3-none-any.whl", hash = "sha256:bad7f5d431886fcbaf5f758118ecff70d31f75231b34024a1341120340a65ce8"},
+    {file = "mistune-2.0.5.tar.gz", hash = "sha256:0246113cb2492db875c6be56974a7c893333bf26cd92891c85f63151cee09d34"},
+]
+
+[[package]]
 name = "multiprocess"
 version = "0.70.14"
 description = "better multiprocessing and multithreading in python"
@@ -452,4 +464,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "c4f82a7e2e60904274c8922bece990d3721833c0956fe3470755f5ecd39da8db"
+content-hash = "5ea455d128014ba8b5612ff882e16a2c07817229c0b8278064daa36fea70d0b7"

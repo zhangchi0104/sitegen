@@ -1,6 +1,20 @@
 [index]
 default_section = "about"
+profile_image = "test.png"
+cv_update_date = "Mar., 2023"
+email_address = "nanyiyang@gmail.com"
+bio = '''
+I am a master's student at Brown University 🐻, 
+studying Computer Science. I work with Professor [Stephen Bach](https://example.com) as a member of the BATS lab. 
 
+I am also working with Professor [Yapeng Tian](https://example.com) at University of Texas - Dallas on audio-visual scene understanding
+
+Previously, I completed my B.S. at the University of Michigan  - Ann Arbor 〽️,
+where I triple majored in Data Science, Statistics and Mathematics of Finance. 
+At UM, I was fortunate to work closely with Professor [Yuanfang Guan](https://example.com) on bioinformatics.
+'''
 [about]
-foo = "bar"
-bar = "foo"
+profile_image = "test.png"
+
+[__GLOBALS__]
+sections = ["about", "research", "misc"]
