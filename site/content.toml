@@ -1,3 +1,6 @@
+[__globals__]
+google_tracker_id = ""
+
 [index]
 default_section = "about"
 profile_image = "test.png"
@@ -13,8 +16,94 @@ Previously, I completed my B.S. at the University of Michigan  - Ann Arbor ã€½ï¸
 where I triple majored in Data Science, Statistics and Mathematics of Finance. 
 At UM, I was fortunate to work closely with Professor [Yuanfang Guan](https://example.com) on bioinformatics.
 '''
-[about]
-profile_image = "test.png"
+name = "Yiyang Nan"
 
-[__GLOBALS__]
-sections = ["about", "research", "misc"]
+[[research.publications]]
+title = "Learning to lgnore Adversarial Attacks"
+link = "https://arxiv.org/pdf/2006.00000.pdf"
+authors = ["Yiyang Nan", "Stephen Bach", "Yapeng Tian"]
+published_on = "EACL 2023"
+links = { pdf = "https://arxiv.org/pdf/2006.00000.pdf", code = "https://github.com" }
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[research.publications]]
+title = "Learning to lgnore Adversarial Attacks"
+authors = ["Yiyang Nan", "Stephen Bach", "Yapeng Tian"]
+published_on = "EACL 2023"
+links = { pdf = "https://arxiv.org/pdf/2006.00000.pdf", code = "https://github.com" }
+link = "https://arxiv.org/pdf/2006.00000.pdf"
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[research.manuscripts]]
+title = "Learning to lgnore Adversarial Attacks"
+authors = ["Yiyang Nan", "Stephen Bach", "Yapeng Tian"]
+links = { pdf = "https://arxiv.org/pdf/2006.00000.pdf", code = "https://github.com" }
+link = "https://arxiv.org/pdf/2006.00000.pdf"
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[research.manuscripts]]
+title = "Learning to lgnore Adversarial Attacks"
+authors = ["Yiyang Nan", "Stephen Bach", "Yapeng Tian"]
+links = { pdf = "https://arxiv.org/pdf/2006.00000.pdf", code = "https://github.com" }
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[research.competitions]]
+year = 2021
+rank = "top 4 finalist" 
+title = "the(sugar)science D-Challenge - Type 1 Diabetes Research Challenge"
+link = "https://www.kaggle.com/c/the-sugar-science-d-challenge"
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[research.competitions]]
+year = 2021
+rank = "top 4 finalist" 
+title = "the(sugar)science D-Challenge - Type 1 Diabetes Research Challenge"
+link = "https://www.kaggle.com/c/the-sugar-science-d-challenge"
+description = '''
+Norem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[misc]
+bio = '''
+Gorem ipsum dolor sit amet, consectetur adipiscing elit.
+Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+Curabitur tempus urna at turpis condimentum lobortis
+'''
+
+[[misc.photos]]
+name = "My dog"
+url = "https://w.wallhaven.cc/full/l8/wallhaven-l8ze82.jpg"
+
+[[misc.photos]]
+name = "My dog"
+url  = "https://w.wallhaven.cc/full/l8/wallhaven-l8ze82.jpg"
+

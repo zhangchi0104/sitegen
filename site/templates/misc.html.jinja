@@ -1,0 +1,16 @@
+{% extends "_base.html.jinja" %}
+
+{% block body %}
+<div>
+  <div class="grid grid-cols-4 gap-4">
+    {% for photo in photos %}
+    <img src="{{ photo['url'] }}" alt="{{ photo['name'] }}" class="h-72 object-cover">
+    {% endfor %}
+  </div>
+  <div class="mt-6">
+  {% markdown %}
+  {{ bio }}
+  {% endmarkdown %}
+  </div>
+</div>
+{% endblock %}

@@ -1,5 +1,63 @@
 {% extends "_base.html.jinja" %}
 
+{% macro render_paper(content_dict)  -%}
+<div class="my-4 leading-6">
+  <h4 class="text-fuchsia-600 hover:text-fuchsia-800"><a href="{{content_dict['link']}}">{{content_dict['title'] }}</a></h4>
+  {% if 'published_on' in  content_dict.keys() %}
+  <p>{{ content_dict['published_on'] }}</p>
+  {% endif %}
+  <div>
+      {% for author in content_dict['authors'] -%}
+        {%-if author.startswith("**") and author.endswith("**") -%}
+        <span class="text-base font-bold">{{ author[2:-2] }}</span>
+        {%- else -%}
+        <span>{{ author }}</span>
+        {%- endif -%}
+        {%- if not loop.last -%}
+        <span>,&nbsp; </span>
+        {%- endif -%}
+      {%- endfor %}
+  </div>
+  <div>
+    {% for name, link in content_dict['links'].items() %}
+      <a href="{{ link }}" class="text-fuchsia-600 hover:text-fuchsia-800">{{ name }}</a>
+      {% if not loop.last -%}
+      <span class=""> - </span>
+      {%- endif %}
+    {% endfor %}
+  </div>
+  <p class="text-gray-600">
+    <span class="font-bold">Description: </span> {{ content_dict['description'] }}
+  </p>
+</div>
+{%- endmacro %}
+
+
+{% macro render_competition(competition) -%}
+<div class="my-4 leading-6">
+  <p>
+  <span class="font-bold">{{competition['year']}}, {{ competition['rank'] }}</span> - 
+  <span>{{ competition['title'] }}</span>
+  </p>
+  <a href="{{ competition['link'] }}" class="text-fuchsia-600 hover:text-fuchsia-800">link</a>
+  <p class="text-gray-600">
+    <span class="font-bold">Description: </span> {{ competition['description'] }}
+  </p>
+</div>
+{%- endmacro %}
+
+
 {% block body %}
-research.html
+<h1 class="font-bold text-3xl">Publications</h1>
+{% for publication in  publications %}
+    {{ render_paper(publication) }}
+{% endfor %}
+<h1 class="font-bold text-3xl">Manuscripts</h1>
+{% for publication in  manuscripts -%}
+    {{ render_paper(publication) }}
+{%- endfor %}
+<h1 class="font-bold text-3xl">Competitions</h1>
+{% for competition in  competitions -%}
+    {{ render_competition(competition) }}
+{%- endfor %}
 {% endblock %}
