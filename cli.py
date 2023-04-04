@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from sitegen.devserver import DevServer
+from sitegen.devserver import FileWatcher
 from watchdog.observers import Observer
 from rich.logging import RichHandler
 from pathlib import Path
@@ -19,18 +19,16 @@ def parse_args():
     return parser.parse_args()
 
 
-def main(args):
+async def main(args):
     project_root = Path(args.project_root)
-    config = Config.from_toml(project_root / "config.toml")
     if args.verbose:
         logging.basicConfig(handlers=[RichHandler()], level=logging.DEBUG)
     else:
         logging.basicConfig(handlers=[RichHandler()], level=logging.INFO)
     logging.debug(f"Project Root: {args.project_root}")
     if args.command == "dev":
-        dev_server = DevServer(
-            config=config,
-            project_root=Path(args.project_root),
+        dev_server = FileWatcher(
+            project_root=project_root,
             port=args.port,
             addr=args.addr,
         )
@@ -38,12 +36,13 @@ def main(args):
         observer.schedule(dev_server, path=args.project_root, recursive=True)
         observer.start()
         try:
-            while True:
-                input()
+            await dev_server._ws_server._server_task
         except KeyboardInterrupt:
             observer.stop()
+            dev_server.terminate()
         observer.join()
 
 
 if __name__ == "__main__":
-    main(parse_args())
+    import asyncio as aio
+    aio.run(main(parse_args()))
