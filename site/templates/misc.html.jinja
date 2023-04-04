@@ -2,9 +2,9 @@
 
 {% block body %}
 <div>
-  <div class="grid grid-cols-4 gap-4">
+  <div class="grid sm:grid-cols-4 grid-cols-2 gap-4">
     {% for photo in photos %}
-    <img src="{{ photo['url'] }}" alt="{{ photo['name'] }}" class="h-72 object-cover">
+    <img src="{{ photo['url'] }}" alt="{{ photo['name'] }}" class="sm:h-72 h-36 object-cover">
     {% endfor %}
   </div>
   <div class="mt-6">
