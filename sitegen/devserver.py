@@ -1,6 +1,7 @@
 from types import FunctionType
 from flask.templating import Environment
 from watchdog.events import FileSystemEventHandler
+
 from .extensions.template import AutoRefreshListener, MarkdownRender
 
 from sitegen.extensions import ConfigOverrider
@@ -179,23 +180,16 @@ class DevServer(Flask, LoggerMixin):
                          template_dir.absolute().as_posix(), instance_path,
                          instance_relative_config, root_path)
 
-        self._template_content = None
+        self._content_loader = self._project_config.general.content_loader(
+            Path(self._project_root))
+        self._content_loader.load()
         self.derive_routes_from_dir()
         self._merge_overrides()
 
     def restart(self):
-        self.reload_template_content()
+        self.content_loader.load()
         self.derive_routes_from_dir()
         self._merge_overrides()
-
-    @property
-    def template_content(self):
-        if self._template_content is None:
-            from tomli import load
-            self.info(f"Loading template content from '{self.content_file}'")
-            with open(self.content_file, "rb") as f:
-                self._template_content = load(f)
-        return self._template_content
 
     def reload_template_content(self):
         from tomli import load
@@ -204,9 +198,8 @@ class DevServer(Flask, LoggerMixin):
             self._template_content = load(f)
 
     @property
-    def content_file(self):
-        return self._project_root / Path(
-            self._project_config.general.content_file)
+    def content_loader(self):
+        return self._content_loader
 
     def derive_routes_from_dir(self):
         for path in Path(self.template_folder).iterdir():
@@ -216,7 +209,7 @@ class DevServer(Flask, LoggerMixin):
                     ".html.jinja") and not path.stem.startswith("_"):
                 url_path = "/" if path.stem.startswith(
                     "index.") else f"/{path.stem.split('.')[0]}"
-                context = self.lookup_context(url_path)
+                context = self.content_loader.url_indexer.get(url_path, {})
                 context["SITEGEN_ENV"] = "dev"
                 self.add_url_rule(
                     url_path,
@@ -229,21 +222,6 @@ class DevServer(Flask, LoggerMixin):
                 )
                 self.info(f"Added route '{url_path}' -> '{path}'")
                 self._logger.debug(f"route '{url_path}' context: {context}")
-
-    def lookup_context(self, url_path: str):
-        res = None
-        if url_path == "/":
-            res = self.template_content.get("index", {})
-        else:
-            parts = url_path.strip("/").rstrip("/index").split("/")
-            res = self.template_content
-            for part in parts:
-                res = res.get(part, {})
-                if len(res) == 0:
-                    break
-
-        res['__globals__'] = self.template_content.get("__globals__", {})
-        return res
 
     def _set_jinja_callback(self, overrides: ConfigOverrider):
 
