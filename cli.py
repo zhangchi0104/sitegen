@@ -12,9 +12,12 @@ def parse_args():
     parser.add_argument("--project_root", "-p", default=".")
     parser.add_argument("--verbose", "-v", action="store_true")
     subparser = parser.add_subparsers(dest="command")
+    # dev
     dev_parser = subparser.add_parser("dev")
     dev_parser.add_argument("--port", "-P", default=8000)
     dev_parser.add_argument("--addr", "-A", default="0.0.0.0")
+    # build
+    build_parser = subparser.add_parser("build")
 
     return parser.parse_args()
 
@@ -41,6 +44,10 @@ async def main(args):
             observer.stop()
             dev_server.terminate()
         observer.join()
+    if args.command == "build":
+        from sitegen.build import ProjectRenderer
+        renderer = ProjectRenderer(project_root)
+        renderer.build()
 
 
 if __name__ == "__main__":

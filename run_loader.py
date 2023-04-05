@@ -1,9 +1,5 @@
-from sitegen.loaders.content import ContentPathLoader
-from rich.pretty import pprint
-import logging
+from sitegen.build import ProjectRenderer
 
-logging.basicConfig(level=logging.DEBUG)
-loader = ContentPathLoader("tomls")
-loader.load()
-pprint(loader._inner)
-# pprint(loader['bar.baz'])
+renderer = ProjectRenderer("site")
+templates = renderer._jinja_env.list_templates()
+print(templates)

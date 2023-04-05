@@ -1,6 +1,7 @@
 import logging
 from functools import wraps
 from typing import Any, Concatenate, ParamSpec, TypeVar, Callable
+from pathlib import Path
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -42,3 +43,16 @@ class LoggerMixin(object):
     @copy_method_signature(logging.debug)
     def debug(self, *args, **kwargs):
         self._logger.debug(*args, **kwargs)
+
+
+def build_keypath_from_relative_path(path: Path):
+    p = Path(path)
+    suffixes = p.suffixes
+    full_path = p.as_posix()
+    for suffix in suffixes[::-1]:
+        full_path = full_path.removesuffix(suffix)
+    if full_path == ".":
+        full_path = "index"
+
+    full_path = full_path.replace('/', '.')
+    return full_path

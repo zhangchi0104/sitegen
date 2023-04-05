@@ -79,6 +79,7 @@ class ContentPathLoader(ContentLoader, LoggerMixin):
     def __init__(self, p):
         ContentLoader.__init__(self, p)
         LoggerMixin.__init__(self, "ContentDirLoader")
+        self.load()
 
     def load(self):
         p = Path(self._content_cfg) if not isinstance(
@@ -105,7 +106,6 @@ class ContentPathLoader(ContentLoader, LoggerMixin):
             if content is not None:
                 suffixes = p.suffixes
                 full_path = p.relative_to(path).as_posix()
-                self.debug("full_path: " + f'"{full_path}"')
                 for suffix in suffixes:
                     full_path = full_path.removesuffix(suffix)
                 if full_path == ".":
@@ -123,6 +123,7 @@ class ContentMappingLoader(ContentLoader):
 
     def __init__(self, p: Any):
         ContentLoader.__init__(self, p)
+        self.load()
 
     def load(self):
         for cfg in self._content_cfg:
